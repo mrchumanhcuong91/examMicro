@@ -1,7 +1,7 @@
 package server
 
 import (
-	m "example/server/user_service/models"
+	m "example/server/models"
 	"log"
 	// userService "example/service/userService/proto"
 	"fmt"
@@ -28,8 +28,8 @@ func (s *ApiGateWayServer) CreateUserCtrl(c *gin.Context) {
 	client := proto.NewHelloworldService("helloworld", srv.Client())
 
 	// call an endpoint on the service
-	rsp, err := client.Call(context.Background(), &proto.Request{
-		Name: user.Name,
+	rsp, err := client.AddUser(context.Background(), &proto.UserModel{
+		Name: user.Name,Age : int64(user.Age), Idcard: user.CardNumber,
 	})
 	if err != nil {
 		fmt.Println("Error calling helloworld: ", err)

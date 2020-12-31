@@ -1,7 +1,8 @@
 package databases
 import(
 	"log"
-	m "example/server/user_service/models"
+	m "helloworld/user_service/models"
+	_ "github.com/go-sql-driver/mysql"
 	sql "database/sql"
 )
 type MySqlAdapter struct{
@@ -11,6 +12,7 @@ type MySqlAdapter struct{
 func NewMysql(sqlPath string) (*MySqlAdapter){
 	DB, err := sql.Open("mysql",sqlPath)
 	log.Printf("error %v",err)
+	log.Printf("error DB  %p",DB)
 	_, err = DB.Exec("use microservice")
 	log.Printf("error use database %v",err)
 
@@ -20,7 +22,9 @@ func NewMysql(sqlPath string) (*MySqlAdapter){
 	return &MySqlAdapter{db: DB}
 }
 func (a *MySqlAdapter)InsertUser(u *m.User) error{
-	a.db.Exec("insert into users(name, age) values(?,?)",u.Name, u.Age)
+	log.Printf("InsertUser mysql %v",u.Name)
+	_, err:= a.db.Exec("insert into users(name, age) values(?,?)",u.Name, u.Age)
+	log.Printf("InsertUser error  %v",err)
 	return nil
 }
 func (a *MySqlAdapter)UpdateUser(u *m.User, id string) error{

@@ -1,6 +1,6 @@
 package databases
 import(
-	m "example/server/user_service/models"
+	m "helloworld/user_service/models"
 )
 
 type Adapter interface{

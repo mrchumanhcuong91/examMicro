@@ -43,6 +43,13 @@ func NewHelloworldEndpoints() []*api.Endpoint {
 
 type HelloworldService interface {
 	Call(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error)
+	//user
+	AddUser(ctx context.Context, in *UserModel, opts ...client.CallOption) (*Response, error)
+	UpdateUser(ctx context.Context, in *UserModel, opts ...client.CallOption) (*Response, error)
+	DeleteUser(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error)
+	GetUser(ctx context.Context, in *Request, opts ...client.CallOption) (*UserModel, error)
+	GetAllUser(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error)
+	//end
 	Stream(ctx context.Context, in *StreamingRequest, opts ...client.CallOption) (Helloworld_StreamService, error)
 	PingPong(ctx context.Context, opts ...client.CallOption) (Helloworld_PingPongService, error)
 }
@@ -61,6 +68,56 @@ func NewHelloworldService(name string, c client.Client) HelloworldService {
 
 func (c *helloworldService) Call(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error) {
 	req := c.c.NewRequest(c.name, "Helloworld.Call", in)
+	out := new(Response)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *helloworldService) AddUser(ctx context.Context, in *UserModel, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "Helloworld.AddUser", in)
+	out := new(Response)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *helloworldService) UpdateUser(ctx context.Context, in *UserModel, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "Helloworld.UpdateUser", in)
+	out := new(Response)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *helloworldService) DeleteUser(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "Helloworld.DeleteUser", in)
+	out := new(Response)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *helloworldService) GetUser(ctx context.Context, in *Request, opts ...client.CallOption) (*UserModel, error) {
+	req := c.c.NewRequest(c.name, "Helloworld.GetUser", in)
+	out := new(UserModel)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *helloworldService) GetAllUser(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "Helloworld.GetAllUser", in)
 	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -173,6 +230,13 @@ func (x *helloworldServicePingPong) Recv() (*Pong, error) {
 
 type HelloworldHandler interface {
 	Call(context.Context, *Request, *Response) error
+	//user
+	AddUser(context.Context, *UserModel, *Response) error
+	UpdateUser(context.Context, *UserModel, *Response) error
+	DeleteUser(context.Context, *Request, *Response) error
+	GetUser(context.Context, *Request, *UserModel) error
+	GetAllUser(context.Context, *Request, *Response) error
+	//end
 	Stream(context.Context, *StreamingRequest, Helloworld_StreamStream) error
 	PingPong(context.Context, Helloworld_PingPongStream) error
 }
@@ -180,6 +244,11 @@ type HelloworldHandler interface {
 func RegisterHelloworldHandler(s server.Server, hdlr HelloworldHandler, opts ...server.HandlerOption) error {
 	type helloworld interface {
 		Call(ctx context.Context, in *Request, out *Response) error
+		AddUser(ctx context.Context, in *UserModel, out *Response) error
+		UpdateUser(ctx context.Context, in *UserModel, out *Response) error
+		DeleteUser(ctx context.Context, in *Request, out *Response) error
+		GetUser(ctx context.Context, in *Request, out *UserModel) error
+		GetAllUser(ctx context.Context, in *Request, out *Response) error
 		Stream(ctx context.Context, stream server.Stream) error
 		PingPong(ctx context.Context, stream server.Stream) error
 	}
@@ -196,6 +265,26 @@ type helloworldHandler struct {
 
 func (h *helloworldHandler) Call(ctx context.Context, in *Request, out *Response) error {
 	return h.HelloworldHandler.Call(ctx, in, out)
+}
+
+func (h *helloworldHandler) AddUser(ctx context.Context, in *UserModel, out *Response) error {
+	return h.HelloworldHandler.AddUser(ctx, in, out)
+}
+
+func (h *helloworldHandler) UpdateUser(ctx context.Context, in *UserModel, out *Response) error {
+	return h.HelloworldHandler.UpdateUser(ctx, in, out)
+}
+
+func (h *helloworldHandler) DeleteUser(ctx context.Context, in *Request, out *Response) error {
+	return h.HelloworldHandler.DeleteUser(ctx, in, out)
+}
+
+func (h *helloworldHandler) GetUser(ctx context.Context, in *Request, out *UserModel) error {
+	return h.HelloworldHandler.GetUser(ctx, in, out)
+}
+
+func (h *helloworldHandler) GetAllUser(ctx context.Context, in *Request, out *Response) error {
+	return h.HelloworldHandler.GetAllUser(ctx, in, out)
 }
 
 func (h *helloworldHandler) Stream(ctx context.Context, stream server.Stream) error {

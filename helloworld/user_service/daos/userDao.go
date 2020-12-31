@@ -1,8 +1,9 @@
 package daos
 import (
 	"log"
-	d "example/server/user_service/databases"
-	m "example/server/user_service/models"
+	d "helloworld/user_service/databases"
+	m "helloworld/user_service/models"
+	logs "github.com/micro/micro/v3/service/logger"
 )
 
 
@@ -16,6 +17,7 @@ func InitUserDao(config string)(dao * UserDao) {
 }
 func(u* UserDao) AddUser(user* m.User) error{
 	//call global database
+	logs.Info("Received UserDao.AddUser request")
 	return u.a.InsertUser(user)
 }
 func(u* UserDao) FindUser(id string) (m.User,error){

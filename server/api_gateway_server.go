@@ -1,6 +1,6 @@
 package server
 import ("github.com/gin-gonic/gin"
-		dao "example/server/user_service/daos"
+		// dao "example/server/user_service/daos"
 		client "github.com/micro/micro/v3/service/client"
 		"log"
 		)
@@ -9,7 +9,6 @@ type ApiGateWayServer struct{
 	//web service
 	* gin.Engine
 	//authorization service
-	uDao *dao.UserDao
 	Client client.Client
 
 }
@@ -17,7 +16,7 @@ type ApiGateWayServer struct{
 func NewApiGateWayServer(mysql string) (api *ApiGateWayServer){
 	log.Println("call NewApiGateWayServer %v",mysql)
 	api = &ApiGateWayServer{
-		Engine: gin.Default()}
+		Engine: gin.Default(),}
 	api.createAuthenApi()
 	return
 }
