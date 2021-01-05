@@ -10,7 +10,7 @@ service Helloworld {
 	rpc AddUser(UserModel) returns (Response) {}
 	rpc UpdateUser(UserModel) returns (Response) {}
 	rpc DeleteUser(Request) returns (Response) {}
-	rpc GetUser(Request) returns (UserModel) {}
+	rpc GetUser(Request) returns (Response) {}
 	rpc GetAllUser(Request) returns (Response) {}
 	//end
 	rpc Stream(StreamingRequest) returns (stream StreamingResponse) {}
@@ -27,13 +27,14 @@ message UserModel{
 }
 message Request {
 	string name = 1;
-	
+    string id = 2;
 }
 
 message Response {
 	string msg = 1;
-	repeated UserModel listUser = 2;
-
+	repeated UserModel ListUser = 2;
+    UserModel Result = 3;
+    int64 ErrCode = 4;
 }
 
 message StreamingRequest {

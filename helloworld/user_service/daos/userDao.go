@@ -15,6 +15,7 @@ func InitUserDao(config string)(dao * UserDao) {
 	instanse := d.NewMysql(config)
 	return &UserDao{a :  instanse}
 }
+
 func(u* UserDao) AddUser(user* m.User) error{
 	//call global database
 	logs.Info("Received UserDao.AddUser request")
@@ -26,6 +27,12 @@ func(u* UserDao) FindUser(id string) (m.User,error){
 func(u* UserDao) UpdateUser(user* m.User) error{
 	return nil
 }
-func(u* UserDao) DeleteUser(user* m.User) error{
-	return nil
+func(u* UserDao) DeleteUser(id string) error{
+    return u.a.DeleteUser(id)
+}
+func(u* UserDao) GetUser(id string) (m.User, error){
+	return m.User{}, nil
+}
+func(u* UserDao) GetUsers() ([]m.User, error){
+	return u.a.GetUsers()
 }

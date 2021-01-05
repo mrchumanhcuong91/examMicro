@@ -23,7 +23,7 @@ func NewMysql(sqlPath string) (*MySqlAdapter){
 }
 func (a *MySqlAdapter)InsertUser(u *m.User) error{
 	log.Printf("InsertUser mysql %v",u.Name)
-	_, err:= a.db.Exec("insert into users(name, age) values(?,?)",u.Name, u.Age)
+	_, err:= a.db.Exec("insert into users(cardnumber, name, age) values(?,?,?)",u.CardNumber,u.Name, u.Age)
 	log.Printf("InsertUser error  %v",err)
 	return nil
 }
@@ -31,33 +31,41 @@ func (a *MySqlAdapter)UpdateUser(u *m.User, id string) error{
 	a.db.Exec("update users set name=?,age=? where id=?", u.Name, u.Age, id)
 	return nil
 }
-func (a *MySqlAdapter)GetUser() ([]m.User, error){
+func (a *MySqlAdapter)GetUsers() ([]m.User, error){
 	rows, err := a.db.Query("select * from users")
+	log.Printf("Get users err %v",err)
+
 	if err == nil{
 		results :=  make([]m.User,0)
 		for rows.Next(){
 			item := m.User{}
-			if err := rows.Scan(&item.Name,&item.Age, &item.CardNumber); err != nil{
-				//fmt.Printf("Scan error %v",err)
+			var ii int
+			if err := rows.Scan(&ii, &item.CardNumber,&item.Name,&item.Age); err != nil{
+				log.Printf("Scan error %v",err)
 				continue
 			}
 			results = append(results, item)
-	
+
 		}
 		return results, nil
 	}
-	
+
 	return nil, nil
+}
+func (a *MySqlAdapter)GetUser(id string) (m.User, error){
+	return m.User{}, nil
 }
 func (a *MySqlAdapter)FindUser(id string) (m.User,error){
 	rows := a.db.QueryRow("select * from users where cardnumber=?",id)
 	result := m.User{}
-	if err := rows.Scan(&result.CardNumber, &result.Name, &result.Age); err != nil{
+    var ii int
+	if err := rows.Scan(&ii, &result.CardNumber,&result.Name,&result.Age); err != nil{
+        log.Printf("FindUser Scan error %v",err)
 		return result, err
 	}
 	return result, nil
 }
 func (a *MySqlAdapter)DeleteUser(id string) error{
-	a.db.Exec("delete from users where id=?",id)
+	a.db.Exec("delete from users where cardnumber=?",id)
 	return nil
 }

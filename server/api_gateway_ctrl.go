@@ -37,9 +37,58 @@ func (s *ApiGateWayServer) CreateUserCtrl(c *gin.Context) {
 	}
 	// print the response
 	fmt.Println("Response: ", rsp.Msg)
-	
+
 // call the endpoint Helloworld.Call
 	log.Printf("bind data %v", rsp)
 	c.JSON(200, gin.H{"create ": "ok"})
+	return
+}
+func (s *ApiGateWayServer) GetUserCtrl(c *gin.Context){
+	log.Printf("call api GetUserCtrl")
+	srv := service.New()
+	//client
+	client := proto.NewHelloworldService("helloworld",srv.Client())
+
+	users, err := client.GetAllUser(context.Background(), &proto.Request{})
+	if err != nil {
+		fmt.Println("Error calling helloworld: ", err)
+		return
+	}
+	log.Printf("bind data %p", users.ListUser)
+	c.JSON(200, users.ListUser)
+	return
+}
+func (s* ApiGateWayServer)GetUserById (c* gin.Context){
+    id := c.Param("id")
+    fmt.Println(" GetUserById: id ", id)
+    srv := service.New()
+
+    client := proto.NewHelloworldService("helloworld", srv.Client())
+
+    rsp, err := client.GetUser(context.Background(), &proto.Request{Id: id})
+
+    if err != nil{
+        fmt.Println("Error calling GetUserById: ", err)
+		return
+    }
+    log.Printf("bind data %p", rsp.Result)
+	c.JSON(200, rsp.Result)
+	return
+}
+func (s* ApiGateWayServer)DeleteById (c* gin.Context){
+    id := c.Param("id")
+    fmt.Println(" GetUserById: id ", id)
+    srv := service.New()
+
+    client := proto.NewHelloworldService("helloworld", srv.Client())
+
+    rsp, err := client.DeleteUser(context.Background(), &proto.Request{Id: id})
+
+    if err != nil{
+        fmt.Println("Error calling GetUserById: ", err)
+		return
+    }
+    log.Printf("bind data %p", rsp.ErrCode)
+	c.JSON(200, gin.H{"response": rsp.ErrCode})
 	return
 }
