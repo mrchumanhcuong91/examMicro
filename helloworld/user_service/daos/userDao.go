@@ -36,3 +36,6 @@ func(u* UserDao) GetUser(id string) (m.User, error){
 func(u* UserDao) GetUsers() ([]m.User, error){
 	return u.a.GetUsers()
 }
+func(u* UserDao) GetUserByName(name string) (m.User, error){
+	return u.a.GetUserByName(name)
+}

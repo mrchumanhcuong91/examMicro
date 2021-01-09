@@ -11,6 +11,7 @@ service Helloworld {
 	rpc UpdateUser(UserModel) returns (Response) {}
 	rpc DeleteUser(Request) returns (Response) {}
 	rpc GetUser(Request) returns (Response) {}
+	rpc GetUserByName(Request) returns (Response) {}
 	rpc GetAllUser(Request) returns (Response) {}
 	//end
 	rpc Stream(StreamingRequest) returns (stream StreamingResponse) {}

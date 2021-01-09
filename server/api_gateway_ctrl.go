@@ -92,3 +92,33 @@ func (s* ApiGateWayServer)DeleteById (c* gin.Context){
 	c.JSON(200, gin.H{"response": rsp.ErrCode})
 	return
 }
+func (s* ApiGateWayServer) LoginUserCtrl(c* gin.Context){
+    log.Printf("call api LoginUserCtrl")
+	user := m.User{}
+	err := c.ShouldBindJSON(&user)
+	if err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+	// s.authService.RegisterUser(&a.AuthUser{})
+	log.Printf("bind data %v", user.Name)
+	srv := service.New()
+
+	// create the proto client for helloworld
+	client := proto.NewHelloworldService("helloworld", srv.Client())
+
+	rsp, err := client.GetUserByName(context.Background(), &proto.Request{Name: user.Name})
+	if err != nil{
+		code := int(rsp.ErrCode)
+		c.JSON(code, gin.H{"response": err})
+		return
+	}
+	if rsp.ErrCode == 200 && rsp.Result.Idcard == user.CardNumber{
+		c.JSON(200, gin.H{"response": "ok"})
+		return
+	}else{
+		c.JSON(404, gin.H{"response": "Not match"})
+		return
+	}
+	
+}

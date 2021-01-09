@@ -48,6 +48,7 @@ type HelloworldService interface {
 	UpdateUser(ctx context.Context, in *UserModel, opts ...client.CallOption) (*Response, error)
 	DeleteUser(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error)
 	GetUser(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error)
+	GetUserByName(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error)
 	GetAllUser(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error)
 	//end
 	Stream(ctx context.Context, in *StreamingRequest, opts ...client.CallOption) (Helloworld_StreamService, error)
@@ -108,6 +109,16 @@ func (c *helloworldService) DeleteUser(ctx context.Context, in *Request, opts ..
 
 func (c *helloworldService) GetUser(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error) {
 	req := c.c.NewRequest(c.name, "Helloworld.GetUser", in)
+	out := new(Response)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *helloworldService) GetUserByName(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "Helloworld.GetUserByName", in)
 	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -235,6 +246,7 @@ type HelloworldHandler interface {
 	UpdateUser(context.Context, *UserModel, *Response) error
 	DeleteUser(context.Context, *Request, *Response) error
 	GetUser(context.Context, *Request, *Response) error
+	GetUserByName(context.Context, *Request, *Response) error
 	GetAllUser(context.Context, *Request, *Response) error
 	//end
 	Stream(context.Context, *StreamingRequest, Helloworld_StreamStream) error
@@ -248,6 +260,7 @@ func RegisterHelloworldHandler(s server.Server, hdlr HelloworldHandler, opts ...
 		UpdateUser(ctx context.Context, in *UserModel, out *Response) error
 		DeleteUser(ctx context.Context, in *Request, out *Response) error
 		GetUser(ctx context.Context, in *Request, out *Response) error
+		GetUserByName(ctx context.Context, in *Request, out *Response) error
 		GetAllUser(ctx context.Context, in *Request, out *Response) error
 		Stream(ctx context.Context, stream server.Stream) error
 		PingPong(ctx context.Context, stream server.Stream) error
@@ -281,6 +294,10 @@ func (h *helloworldHandler) DeleteUser(ctx context.Context, in *Request, out *Re
 
 func (h *helloworldHandler) GetUser(ctx context.Context, in *Request, out *Response) error {
 	return h.HelloworldHandler.GetUser(ctx, in, out)
+}
+
+func (h *helloworldHandler) GetUserByName(ctx context.Context, in *Request, out *Response) error {
+	return h.HelloworldHandler.GetUserByName(ctx, in, out)
 }
 
 func (h *helloworldHandler) GetAllUser(ctx context.Context, in *Request, out *Response) error {

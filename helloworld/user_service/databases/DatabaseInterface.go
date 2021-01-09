@@ -11,4 +11,5 @@ type Adapter interface{
 
 	FindUser(id string) (m.User, error)
 	DeleteUser(id string) error
+    GetUserByName(name string) (m.User, error)
 }

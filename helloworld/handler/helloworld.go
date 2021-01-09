@@ -48,6 +48,21 @@ func (e *Helloworld) GetUser(ctx context.Context, req *helloworld.Request, rsp *
     rsp.Result = &helloworld.UserModel{Name: user.Name, Age: int64(user.Age), Idcard: user.CardNumber}
 	return nil
 }
+func (e *Helloworld) GetUserByName(ctx context.Context, req *helloworld.Request, rsp *helloworld.Response) error{
+	name := req.Name
+	user,err := e.Dao.GetUserByName(name)
+	if err != nil{
+		fmt.Printf("Received Helloworld.GetUserByName err %v",err)
+		rsp.ErrCode = 500
+		
+	}else{
+		fmt.Printf("Received Helloworld.GetUserByName id %v",user.CardNumber)
+		rsp.Result = &helloworld.UserModel{Name: user.Name, Age: int64(user.Age), Idcard: user.CardNumber}
+		rsp.ErrCode = 200
+	}
+	return nil
+}
+
 func (e *Helloworld) GetAllUser(ctx context.Context, req *helloworld.Request, rsp *helloworld.Response) error{
 	log.Info("Received Helloworld.GetAllUser request")
 	users, err := e.Dao.GetUsers()

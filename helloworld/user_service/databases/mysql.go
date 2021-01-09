@@ -69,3 +69,13 @@ func (a *MySqlAdapter)DeleteUser(id string) error{
 	a.db.Exec("delete from users where cardnumber=?",id)
 	return nil
 }
+func (a *MySqlAdapter)GetUserByName(name string) (m.User, error){
+    rows := a.db.QueryRow("select * from users where Name=?",name)
+	result := m.User{}
+    var ii int
+	if err := rows.Scan(&ii, &result.CardNumber,&result.Name,&result.Age); err != nil{
+        log.Printf("FindUser Scan error %v",err)
+		return result, err
+	}
+	return result, nil
+}

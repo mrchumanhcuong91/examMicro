@@ -23,6 +23,7 @@ func NewApiGateWayServer(mysql string) (api *ApiGateWayServer){
 func (api *ApiGateWayServer) createAuthenApi(){
 	v1:=api.Group("/gateway/api")
 	v1.POST("/register",api.CreateUserCtrl)
+    v1.POST("/login",api.LoginUserCtrl)
     /*
         192.168.0.105:9091/gateway/api/register
         {
