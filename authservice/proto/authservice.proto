@@ -6,6 +6,7 @@ option go_package = "proto;authservice";
 
 service Authservice {
 	rpc Call(Request) returns (Response) {}
+	rpc GetNewToken(Request) returns (Response) {}
 	rpc Stream(StreamingRequest) returns (stream StreamingResponse) {}
 	rpc PingPong(stream Ping) returns (stream Pong) {}
 }
@@ -16,10 +17,14 @@ message Message {
 
 message Request {
 	string name = 1;
+	string username = 2;
+	string expiretime =3;
 }
 
 message Response {
 	string msg = 1;
+	string pubkey = 2;
+	string token = 3;
 }
 
 message StreamingRequest {

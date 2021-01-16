@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"github.com/micro/micro/v3/service"
 	proto "example/helloworld/proto"
+	authProto "example/authservice/proto"
 	"github.com/gin-gonic/gin"
 	"context"
 
@@ -114,7 +115,20 @@ func (s* ApiGateWayServer) LoginUserCtrl(c* gin.Context){
 		return
 	}
 	if rsp.ErrCode == 200 && rsp.Result.Idcard == user.CardNumber{
-		c.JSON(200, gin.H{"response": "ok"})
+		
+		//call authen server to get token
+		//create token and pubblic key
+		srvAuth := service.New()
+		log.Printf("bind authRsp.Token call authen service")
+		authclient := authProto.NewAuthserviceService("authservice", srvAuth.Client())
+		authRsp, err := authclient.GetNewToken(context.Background(), &authProto.Request{Username: user.Name})
+		if err != nil{
+			// code := int(rsp.ErrCode)
+			log.Printf("bind error %v", err)
+			// c.JSON(code, gin.H{"response": authRsp.Token})
+			return
+		}
+		c.JSON(200, gin.H{"response": "ok","token":authRsp.Token,"public-key":authRsp.Pubkey})
 		return
 	}else{
 		c.JSON(404, gin.H{"response": "Not match"})

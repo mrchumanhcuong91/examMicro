@@ -1,11 +1,11 @@
-package goliauth
+package helper
 
 import (
 	"crypto/aes"
 	"crypto/cipher"
 	"crypto/rand"
-	"encoding/hex"
-	"os"
+	// "encoding/hex"
+	// "os"
 )
 
 // NewRandomKey will generate a 32 bytes random string
@@ -76,17 +76,15 @@ func Encrypt(key []byte) ([]byte, error) {
 }
 //lấy secret key đã lưu vào hệ thống
 func getSecret() []byte {
-	secret := os.Getenv("SECRET")
+	secret := "chumanhcuong1991"
+//os.Getenv("SECRET")
+	
 	if secret == "" {
-		panic("Error: Must provide a secret key under env variable SECRET")
+		// panic("Error: Must provide a secret key under env variable SECRET")
 	}
 
-	secretbite, err := hex.DecodeString(secret)
-
-	if err != nil {
-		// probably malform secret, panic out
-		panic(err)
-	}
+	secretbite := []byte(secret)
 
 	return secretbite
 }
+

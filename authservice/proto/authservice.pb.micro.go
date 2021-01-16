@@ -43,6 +43,7 @@ func NewAuthserviceEndpoints() []*api.Endpoint {
 
 type AuthserviceService interface {
 	Call(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error)
+	GetNewToken(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error)
 	Stream(ctx context.Context, in *StreamingRequest, opts ...client.CallOption) (Authservice_StreamService, error)
 	PingPong(ctx context.Context, opts ...client.CallOption) (Authservice_PingPongService, error)
 }
@@ -61,6 +62,16 @@ func NewAuthserviceService(name string, c client.Client) AuthserviceService {
 
 func (c *authserviceService) Call(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error) {
 	req := c.c.NewRequest(c.name, "Authservice.Call", in)
+	out := new(Response)
+	err := c.c.Call(ctx, req, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *authserviceService) GetNewToken(ctx context.Context, in *Request, opts ...client.CallOption) (*Response, error) {
+	req := c.c.NewRequest(c.name, "Authservice.GetNewToken", in)
 	out := new(Response)
 	err := c.c.Call(ctx, req, out, opts...)
 	if err != nil {
@@ -173,6 +184,7 @@ func (x *authserviceServicePingPong) Recv() (*Pong, error) {
 
 type AuthserviceHandler interface {
 	Call(context.Context, *Request, *Response) error
+	GetNewToken(context.Context, *Request, *Response) error
 	Stream(context.Context, *StreamingRequest, Authservice_StreamStream) error
 	PingPong(context.Context, Authservice_PingPongStream) error
 }
@@ -180,6 +192,7 @@ type AuthserviceHandler interface {
 func RegisterAuthserviceHandler(s server.Server, hdlr AuthserviceHandler, opts ...server.HandlerOption) error {
 	type authservice interface {
 		Call(ctx context.Context, in *Request, out *Response) error
+		GetNewToken(ctx context.Context, in *Request, out *Response) error
 		Stream(ctx context.Context, stream server.Stream) error
 		PingPong(ctx context.Context, stream server.Stream) error
 	}
@@ -196,6 +209,10 @@ type authserviceHandler struct {
 
 func (h *authserviceHandler) Call(ctx context.Context, in *Request, out *Response) error {
 	return h.AuthserviceHandler.Call(ctx, in, out)
+}
+
+func (h *authserviceHandler) GetNewToken(ctx context.Context, in *Request, out *Response) error {
+	return h.AuthserviceHandler.GetNewToken(ctx, in, out)
 }
 
 func (h *authserviceHandler) Stream(ctx context.Context, stream server.Stream) error {

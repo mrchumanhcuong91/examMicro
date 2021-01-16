@@ -4,6 +4,7 @@ go 1.14
 
 require (
 	example/helloworld v0.0.0
+	example/authservice v0.0.0
 	github.com/gin-gonic/gin v1.6.3
 	github.com/micro/micro/v3 v3.0.5-0.20201219085254-c8ea24387d19
 	github.com/micro/services v0.16.0 // indirect
@@ -11,3 +12,4 @@ require (
 )
 
 replace example/helloworld => ./helloworld
+replace example/authservice => ./authservice
